@@ -32,6 +32,38 @@ window.onload = async () => {
         });
     }
 
+    // Función para mostrar el análisis encima de la tabla usando `data-forge`
+    function mostrarAnalisis(df) {
+        // 1. Total de equipos
+        const totalEquipos = df.count();
+
+        // 2. Promedio de goles por equipo (usando la columna 'GF' para Goles a favor)
+        const golesTotales = df
+            .select(row => row.estadisticas.GF)
+            .sum();
+        const promedioGoles = golesTotales / totalEquipos;
+
+        // 3. Total de partidos jugados (usando la columna 'PJ')
+        const totalPartidos = df
+            .select(row => row.estadisticas.PJ)
+            .sum();
+
+        // 4. Promedio de puntos por equipo
+        const puntosTotales = df
+            .select(row => row.puntos)
+            .sum();
+        const promedioPuntos = puntosTotales / totalEquipos;
+
+        // Mostramos el análisis en el div correspondiente
+        const analisisDiv = document.getElementById("analisis");
+        analisisDiv.innerHTML = `
+            <p>Total de equipos: ${totalEquipos}</p>
+            <p>Promedio de goles por equipo: ${promedioGoles.toFixed(2)}</p>
+            <p>Total de partidos jugados: ${totalPartidos}</p>
+            <p>Promedio de puntos por equipo: ${promedioPuntos.toFixed(2)}</p>
+        `;
+    }
+
     // Llamar a la función cuando cargue la ventana
     getClasificacion();
 };
