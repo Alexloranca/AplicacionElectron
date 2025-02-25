@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partidos</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="header-list">
+                <li><a id="btn-clasificacion">Clasificación</a></li>
+                <li><a id="btn-partidos">Partidos</a></li>
+            </ul>
+        </nav>
+    </header>
+    <h1>Partidos</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Ronda</th>
+                <th>Fecha</th>
+                <th>Estadio</th>
+                <th>Local</th>
+                <th>Visitante</th>
+                <th>Resultado</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-partidos">
+            <!-- Aquí se llenarán los datos -->
+        </tbody>
+    </table>
+
+    <script src="renderPartidos.js"></script>
+    <script src="navegacion.js"></script>
+</body>
+</html>
