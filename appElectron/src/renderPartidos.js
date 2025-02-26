@@ -63,10 +63,10 @@ window.onload = async () => {
 
         const analisisDiv = document.getElementById("analisis");
         analisisDiv.innerHTML = `
-            <p><strong>Total de equipos:</strong> ${totalEquipos}</p>
-            <p><strong>Media de partidos jugados por equipo:</strong> ${mediaPartidosPorEquipo.toFixed(2)}</p>
-            <p><strong>Hora más frecuente de juego:</strong> ${horaMasFrecuente}:00 UTC</p>
-            <p><strong>Mayor resultado registrado:</strong> ${mayorResultado.local} ${mayorResultado.resultado} ${mayorResultado.visitante}</p>
+            <p><b>Total de equipos:</b> ${totalEquipos}</p>
+            <p><b>Media de partidos jugados por equipo:</b> ${mediaPartidosPorEquipo.toFixed(2)}</p>
+            <p><b>Hora más frecuente de juego:</b> ${horaMasFrecuente}:00 UTC</p>
+            <p><b>Mayor resultado registrado:</b> ${mayorResultado.local} ${mayorResultado.resultado} ${mayorResultado.visitante}</p>
         `;
     }
 
