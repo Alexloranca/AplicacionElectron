@@ -61,10 +61,10 @@ window.onload = async () => {
         // Mostrar análisis en el HTML
         const analisisDiv = document.getElementById("analisis");
         analisisDiv.innerHTML = `
-            <p>Total de equipos: ${totalEquipos}</p>
-            <p>Total de partidos jugados: ${totalPartidos}</p>
-            <p>Promedio de puntos por equipo: ${promedioPuntos.toFixed(2)}</p>
-            <p>Media de partidos ganados por equipo: ${mediaPG.toFixed(2)}</p>
+            <p><b>Total de equipos:</b> ${totalEquipos}</p>
+            <p><b>Total de partidos jugados:</b> ${totalPartidos}</p>
+            <p><b>Promedio de puntos por equipo:</b> ${promedioPuntos.toFixed(2)}</p>
+            <p><b>Media de partidos ganados por equipo:</b> ${mediaPG.toFixed(2)}</p>
         `;
     }
     
