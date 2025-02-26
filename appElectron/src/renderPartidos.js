@@ -1,11 +1,17 @@
 window.onload = async () => {
     const rutaPartidos = "http://localhost:3000/api/partidos";
     const axios = require("axios");
+    const { DataFrame } = require('data-forge');
 
     async function getPartidos() {
         try {
             const response = await axios.get(rutaPartidos);
-            mostrarPartidos(response.data.partidos);
+            const partidos = response.data.partidos;
+
+            const df = new DataFrame(partidos);
+            mostrarPartidos(partidos);
+            mostrarAnalisis(df);
+
         } catch (error) {
             console.error("Error al obtener los partidos:", error);
         }
@@ -13,7 +19,7 @@ window.onload = async () => {
 
     function mostrarPartidos(data) {
         const tabla = document.getElementById("tabla-partidos");
-        tabla.innerHTML = ""; // Limpiar antes de insertar nuevos datos
+        tabla.innerHTML = ""; 
 
         data.forEach((partido) => {
             const row = document.createElement("tr");
@@ -28,6 +34,40 @@ window.onload = async () => {
             `;
             tabla.appendChild(row);
         });
+    }
+
+    function mostrarAnalisis(df) {
+        const equiposLocales = df.getSeries("partido").select(p => p.local).distinct();
+        const equiposVisitantes = df.getSeries("partido").select(p => p.visitante).distinct();
+        const totalEquipos = equiposLocales.concat(equiposVisitantes).distinct().count();
+
+        const totalPartidos = df.count();
+        const mediaPartidosPorEquipo = totalPartidos / totalEquipos;
+
+        // Hora a la que se juega mas partidos
+        const horasFrecuentes = df.getSeries("fecha")
+            .select(fecha => fecha.split("T")[1].substring(0, 2))
+            .groupBy(h => h)
+            .select(group => ({ hora: group.first(), count: group.count() }))
+            .orderByDescending(g => g.count);
+
+        const horaMasFrecuente = horasFrecuentes.any() ? horasFrecuentes.first().hora : "N/A";
+
+        //Partido con mas goles
+        const mayorResultado = df.getSeries("partido")
+            .orderByDescending(p => {
+                const [golesLocal, golesVisitante] = p.resultado.split(" - ").map(Number);
+                return golesLocal + golesVisitante;
+            })
+            .first();
+
+        const analisisDiv = document.getElementById("analisis");
+        analisisDiv.innerHTML = `
+            <p><strong>Total de equipos:</strong> ${totalEquipos}</p>
+            <p><strong>Media de partidos jugados por equipo:</strong> ${mediaPartidosPorEquipo.toFixed(2)}</p>
+            <p><strong>Hora más frecuente de juego:</strong> ${horaMasFrecuente}:00 UTC</p>
+            <p><strong>Mayor resultado registrado:</strong> ${mayorResultado.local} ${mayorResultado.resultado} ${mayorResultado.visitante}</p>
+        `;
     }
 
     // Llamar a la función cuando cargue la ventana
