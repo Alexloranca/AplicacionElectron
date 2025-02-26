@@ -45,16 +45,16 @@ window.onload = async () => {
         // Total de partidos jugados
         const totalPartidos = df.getSeries("estadisticas")
             .select(est => est.PJ) // Extraer solo PJ
-            .sum();  // No hace falta parseFloats() porque ya son números
-    
+            .sum(); 
+
         // Promedio de puntos
         const puntosTotales = df.getSeries("puntos").sum();
         const promedioPuntos = puntosTotales / totalEquipos;
     
         // Media de partidos ganados (PG)
         const totalPG = df.getSeries("estadisticas")
-            .select(est => est.PG)  // Extraer PG de cada objeto estadisticas
-            .sum();  // No hace falta parseFloats()
+            .select(est => est.PG) 
+            .sum();  
     
         const mediaPG = totalPG / totalEquipos;
     
