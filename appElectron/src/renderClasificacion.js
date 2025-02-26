@@ -1,11 +1,17 @@
 window.onload = async () => {
     const rutaClasificacion = "http://localhost:3000/api/clasificacion";
     const axios = require("axios");
+    const { DataFrame } = require('data-forge');
 
     async function getClasificacion() {
         try {
             const response = await axios.get(rutaClasificacion);
-            mostrarClasificacion(response.data.clasificacion);
+            const clasificacion = response.data.clasificacion;
+
+            const df = new DataFrame(clasificacion);
+            mostrarAnalisis(df);
+
+            mostrarClasificacion(clasificacion);
         } catch (error) {
             console.error("Error al obtener la clasificación:", error);
         }
@@ -32,38 +38,36 @@ window.onload = async () => {
         });
     }
 
-    // Función para mostrar el análisis encima de la tabla usando `data-forge`
     function mostrarAnalisis(df) {
-        // 1. Total de equipos
+        // Total de equipos
         const totalEquipos = df.count();
-
-        // 2. Promedio de goles por equipo (usando la columna 'GF' para Goles a favor)
-        const golesTotales = df
-            .select(row => row.estadisticas.GF)
-            .sum();
-        const promedioGoles = golesTotales / totalEquipos;
-
-        // 3. Total de partidos jugados (usando la columna 'PJ')
-        const totalPartidos = df
-            .select(row => row.estadisticas.PJ)
-            .sum();
-
-        // 4. Promedio de puntos por equipo
-        const puntosTotales = df
-            .select(row => row.puntos)
-            .sum();
+    
+        // Total de partidos jugados
+        const totalPartidos = df.getSeries("estadisticas")
+            .select(est => est.PJ) // Extraer solo PJ
+            .sum();  // No hace falta parseFloats() porque ya son números
+    
+        // Promedio de puntos
+        const puntosTotales = df.getSeries("puntos").sum();
         const promedioPuntos = puntosTotales / totalEquipos;
-
-        // Mostramos el análisis en el div correspondiente
+    
+        // Media de partidos ganados (PG)
+        const totalPG = df.getSeries("estadisticas")
+            .select(est => est.PG)  // Extraer PG de cada objeto estadisticas
+            .sum();  // No hace falta parseFloats()
+    
+        const mediaPG = totalPG / totalEquipos;
+    
+        // Mostrar análisis en el HTML
         const analisisDiv = document.getElementById("analisis");
         analisisDiv.innerHTML = `
             <p>Total de equipos: ${totalEquipos}</p>
-            <p>Promedio de goles por equipo: ${promedioGoles.toFixed(2)}</p>
             <p>Total de partidos jugados: ${totalPartidos}</p>
             <p>Promedio de puntos por equipo: ${promedioPuntos.toFixed(2)}</p>
+            <p>Media de partidos ganados por equipo: ${mediaPG.toFixed(2)}</p>
         `;
     }
-
-    // Llamar a la función cuando cargue la ventana
+    
+    
     getClasificacion();
 };
